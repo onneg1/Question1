@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Questão 1</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="form-container">
+    <h2>Sua mensagem é importante para nós!</h2>
+    <form id="userForm">
+      <input type="text" id="name" placeholder="Nome" required>
+      <input type="email" id="email" placeholder="Email" required>
+      <textarea id="message" rows="4" placeholder="Mensagem" required></textarea>
+      <button type="button" id="submitBtn">Enviar</button>
+    </form>
+  </div>
+  <div class="data-display" id="dataDisplay">
+    <h3>Informações processadas:</h3>
+  </div>
+
+  <script>
+    const form = document.getElementById('userForm');
+    const dataDisplay = document.getElementById('dataDisplay');
+    const submitBtn = document.getElementById('submitBtn');
+
+    // Função para renderizar os dados armazenados
+    function renderData() {
+      const storedData = JSON.parse(localStorage.getItem('userMessages')) || [];
+      dataDisplay.innerHTML = '<h3>Dados Armazenados</h3>';
+      if (storedData.length === 0) {
+        dataDisplay.innerHTML += '<p>Nenhum dado armazenado ainda.</p>';
+        return;
+      }
+      storedData.forEach((item, index) => {
+        dataDisplay.innerHTML += `
+          <div class="data-item">
+            <p><strong>Nome:</strong> ${item.name}</p>
+            <p><strong>Email:</strong> ${item.email}</p>
+            <p><strong>Mensagem:</strong> ${item.message}</p>
+          </div>`;
+      });
+    }
+
+    // Evento ao clicar no botão enviar
+    submitBtn.addEventListener('click', () => {
+      const name = document.getElementById('name').value;
+      const email = document.getElementById('email').value;
+      const message = document.getElementById('message').value;
+
+      if (!name || !email || !message) {
+        alert('Por favor, preencha todos os campos!');
+        return;
+      }
+
+      // Obter dados antigos do Local Storage e adicionar os novos
+      const storedData = JSON.parse(localStorage.getItem('userMessages')) || [];
+      storedData.push({ name, email, message });
+      localStorage.setItem('userMessages', JSON.stringify(storedData));
+
+      //limpando formulario e atualizando exibicao
+      form.reset();
+      renderData();
+    });
+
+    //renderização de dados ao carregar a pagina
+    renderData();
+  </script>
+</body>
+</html>
